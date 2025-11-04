@@ -42,7 +42,10 @@ exports.loginUser = (req, res) => {
             if (!user) return res.status(404).json({ error: 'No user found.' });
 
             const passwordIsValid = bcrypt.compareSync(password, user.password);
-            if (!passwordIsValid) return res.status(401).json({ auth: false, token: null });
+            if (!passwordIsValid) {
+                // Return a consistent error object for invalid credentials
+                return res.status(401).json({ error: 'Invalid username or password', auth: false, token: null });
+            }
 
             const token = jwt.sign(
                 { id: user.id },
