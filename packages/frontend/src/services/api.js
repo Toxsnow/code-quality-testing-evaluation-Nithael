@@ -12,7 +12,11 @@ export const loginUser = async (username, password) => {
     localStorage.setItem('user', JSON.stringify(response.data.user));
     return response.data;
   } catch (error) {
-    throw error.response.data;
+    // Normalize error shape so callers can reliably read `error` or `message`
+    if (error && error.response && error.response.data) {
+      throw error.response.data;
+    }
+    throw { error: error.message || 'Network error' };
   }
 };
 
