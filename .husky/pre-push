@@ -1,8 +1,5 @@
-#!/usr/bin/env node
-// Husky v10+ compatible pre-push hook.
-// Runs the repository test script. Adjust if you prefer a lighter check.
-const { spawnSync } = require('child_process');
-
-// Run the root test script which itself runs workspace tests when present.
-const result = spawnSync('npm', ['run', 'test'], { stdio: 'inherit' });
-process.exit(result.status);
+#!/bin/sh
+# Run the monorepo test script. Using a POSIX shell wrapper avoids shebang
+# interpretation issues on some Git installations while still invoking npm
+# (via npx to ensure a local resolution if needed).
+npx --no -- npm run test
