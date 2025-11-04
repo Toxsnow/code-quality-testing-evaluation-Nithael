@@ -1,4 +1,8 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+#!/usr/bin/env node
+// Husky v10+ compatible hook. Runs lint-staged via a small Node wrapper to
+// avoid relying on the legacy shell helper (which is deprecated and will
+// fail under Husky v10).
+const { spawnSync } = require('child_process');
 
-npx --no -- lint-staged
+const result = spawnSync('npx', ['--no', '--', 'lint-staged'], { stdio: 'inherit' });
+process.exit(result.status);
