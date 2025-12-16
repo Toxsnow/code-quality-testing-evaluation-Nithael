@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+
 import { loginUser } from '../services/api';
 
 const Login = ({ onLogin }) => {
@@ -31,22 +32,22 @@ const Login = ({ onLogin }) => {
   return (
     <div
       style={{
-        maxWidth: '400px',
-        margin: '0 auto',
-        padding: '20px',
+        borderRadius: '8px',
         boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-        borderRadius: '8px'
+        margin: '0 auto',
+        maxWidth: '400px',
+        padding: '20px'
       }}
     >
-      <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Login</h2>
+      <h2 style={{ marginBottom: '20px', textAlign: 'center' }}>Login</h2>
       {error && (
         <div
           style={{
+            backgroundColor: '#ffebee',
+            borderRadius: '4px',
             color: 'red',
             marginBottom: '10px',
-            padding: '10px',
-            backgroundColor: '#ffebee',
-            borderRadius: '4px'
+            padding: '10px'
           }}
         >
           {error}
@@ -66,9 +67,9 @@ const Login = ({ onLogin }) => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           style={{
-            padding: '8px',
+            border: '1px solid #ddd',
             borderRadius: '4px',
-            border: '1px solid #ddd'
+            padding: '8px'
           }}
         />
         <input
@@ -77,20 +78,20 @@ const Login = ({ onLogin }) => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           style={{
-            padding: '8px',
+            border: '1px solid #ddd',
             borderRadius: '4px',
-            border: '1px solid #ddd'
+            padding: '8px'
           }}
         />
         <button
           type="submit"
           style={{
-            padding: '10px',
             backgroundColor: '#4CAF50',
-            color: 'white',
             border: 'none',
             borderRadius: '4px',
-            cursor: 'pointer'
+            color: 'white',
+            cursor: 'pointer',
+            padding: '10px'
           }}
         >
           Login
@@ -98,11 +99,11 @@ const Login = ({ onLogin }) => {
       </form>
       <p
         style={{
-          textAlign: 'center',
-          marginTop: '20px'
+          marginTop: '20px',
+          textAlign: 'center'
         }}
       >
-        Don't have an account? <Link to="/register">Register</Link>
+        Don&apos;t have an account? <Link to="/register">Register</Link>
       </p>
     </div>
   );

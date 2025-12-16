@@ -1,11 +1,12 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+
+import Navigation from './components/Navigation';
+import AddProduct from './pages/AddProduct';
 import Login from './pages/Login';
+import ProductList from './pages/ProductList';
 import Register from './pages/Register';
 import UserList from './pages/UserList';
-import ProductList from './pages/ProductList';
-import AddProduct from './pages/AddProduct';
-import Navigation from './components/Navigation';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = React.useState(!!localStorage.getItem('token'));
@@ -28,21 +29,13 @@ function App() {
     setIsAuthenticated(!!localStorage.getItem('token'));
   }, []);
 
-  const routes = [
-    { path: '/login', element: <Login /> },
-    { path: '/register', element: <Register /> },
-    { path: '/users', element: <UserList /> },
-    { path: '/products', element: <ProductList /> },
-    { path: '/add-product', element: <AddProduct /> }
-  ];
-
   return (
     <BrowserRouter>
       <div
         className="app-container"
         style={{
-          padding: '20px',
-          backgroundColor: theme.secondary
+          backgroundColor: theme.secondary,
+          padding: '20px'
         }}
       >
         {isAuthenticated && <Navigation onLogout={refreshAuth} />}

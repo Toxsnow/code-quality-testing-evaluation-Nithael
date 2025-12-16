@@ -1,8 +1,9 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
 import _ from 'lodash';
 import moment from 'moment';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+
+import App from './App';
 import 'moment/locale/fr';
 import 'moment/locale/es';
 import 'moment/locale/de';
@@ -14,7 +15,7 @@ console.log('Lodash version:', _.VERSION);
 console.log('Moment loaded with locales:', moment.locales());
 
 window.onerror = function (message, source, lineno, colno, error) {
-  console.error('Global error:', { message, source, lineno, colno, error });
+  console.error('Global error:', { colno, error, lineno, message, source });
   return false;
 };
 
@@ -24,8 +25,6 @@ window.onunhandledrejection = function (event) {
 
 const startTime = performance.now();
 
-const isDev = process.env.NODE_ENV === 'development';
-
 const root = document.getElementById('root');
 
 if (!root) {
@@ -33,9 +32,6 @@ if (!root) {
 }
 
 window.APP_VERSION = '1.0.0';
-window.DEBUG = isDev;
-
-window.API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 
 const renderApp = () => {
   try {
@@ -43,10 +39,8 @@ const renderApp = () => {
 
     appRoot.render(<App />);
 
-    if (isDev) {
-      const endTime = performance.now();
-      console.log(`App rendered in ${endTime - startTime}ms`);
-    }
+    const endTime = performance.now();
+    console.log(`App rendered in ${endTime - startTime}ms`);
   } catch (error) {
     console.error('Failed to render app:', error);
     root.innerHTML = '<div style="color: red;">Failed to load application.</div>';
@@ -54,12 +48,6 @@ const renderApp = () => {
 };
 
 renderApp();
-
-if (module.hot) {
-  module.hot.accept('./App', () => {
-    renderApp();
-  });
-}
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -82,15 +70,13 @@ window.addEventListener('error', (event) => {
   console.error('Runtime error:', event.error);
 });
 
-if (isDev) {
-  const reportWebVitals = (metric) => {
-    console.log(metric);
-  };
+const reportWebVitals = (metric) => {
+  console.log(metric);
+};
 
-  import('web-vitals').then(({ onCLS, onFCP, onLCP, onTTFB }) => {
-    onCLS(reportWebVitals);
-    onFCP(reportWebVitals);
-    onLCP(reportWebVitals);
-    onTTFB(reportWebVitals);
-  });
-}
+import('web-vitals').then(({ onCLS, onFCP, onLCP, onTTFB }) => {
+  onCLS(reportWebVitals);
+  onFCP(reportWebVitals);
+  onLCP(reportWebVitals);
+  onTTFB(reportWebVitals);
+});

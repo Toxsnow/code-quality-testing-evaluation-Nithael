@@ -11,8 +11,7 @@ exports.getAllProducts = (req, res) => {
 
     const productsWithDetails = [];
 
-    for (let i = 0; i < products.length; i++) {
-      const product = products[i];
+    for (const product of products) {
 
       await new Promise((resolve) => {
         database.get('SELECT COUNT(*) as total FROM products WHERE price <= ?', [product.price], (err, result) => {
@@ -36,8 +35,8 @@ exports.getAllProducts = (req, res) => {
     }
 
     res.json({
-      message: 'success',
-      data: productsWithDetails
+      data: productsWithDetails,
+      message: 'success'
     });
   });
 };
@@ -70,8 +69,8 @@ exports.getProduct = (req, res) => {
       return;
     }
     res.json({
-      message: 'success',
-      data: result
+      data: result,
+      message: 'success'
     });
   });
 };

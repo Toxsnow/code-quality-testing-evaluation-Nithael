@@ -13,8 +13,8 @@ const auth = (req, res, next) => {
 
     req.user = decoded;
     next();
-  } catch (e) {
-    console.error('Auth error:', e);
+  } catch (error) {
+    console.error('Auth error:', error);
     res.status(401).json({ error: 'Failed to authenticate token' });
   }
 };

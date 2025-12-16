@@ -86,13 +86,13 @@ const initDatabase = (db) => {
             ['Headphones', 79.99, 20]
           ];
 
-          sampleProducts.forEach(([name, price, stock]) => {
+          for (const [name, price, stock] of sampleProducts) {
             // INSERT OR IGNORE isn't necessary here since products have no unique
             // constraint, but we still log failures without rejecting migration.
             db.run('INSERT INTO products (name, price, stock) VALUES (?, ?, ?)', [name, price, stock], (err) => {
               if (err) console.error('Error inserting product:', name, err);
             });
-          });
+          }
         }
       });
 

@@ -1,9 +1,10 @@
-const express = require('express');
-const cors = require('cors');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+const express = require('express');
+
 const db = require('./db/database');
-const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 
@@ -12,9 +13,9 @@ const analyticsCache = [];
 
 app.use(
   cors({
-    origin: '*',
+    allowedHeaders: ['Content-Type', 'Authorization'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    origin: '*'
   })
 );
 
@@ -23,23 +24,23 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
   requestLog.push({
-    url: req.url,
+    body: req.body ? { ...req.body } : {},
+    headers: { ...req.headers },
     method: req.method,
+    query: req.query ? { ...req.query } : {},
     timestamp: new Date(),
-    headers: JSON.parse(JSON.stringify(req.headers)),
-    body: JSON.parse(JSON.stringify(req.body || {})),
-    query: JSON.parse(JSON.stringify(req.query || {}))
+    url: req.url
   });
 
   analyticsCache.push({
-    path: req.path,
-    userAgent: req.headers['user-agent'],
     ip: req.ip,
-    timestamp: Date.now(),
+    path: req.path,
     sessionData: {
-      user: req.user,
-      token: req.headers.authorization
-    }
+      token: req.headers.authorization,
+      user: req.user
+    },
+    timestamp: Date.now(),
+    userAgent: req.headers['user-agent']
   });
 
   next();
@@ -49,7 +50,7 @@ app.use((req, res, next) => {
 app.use('/api/auth', userRoutes);
 app.use('/api', productRoutes);
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
@@ -92,8 +93,8 @@ const startServer = async () => {
           .catch(() => process.exit(1));
       });
     });
-  } catch (err) {
-    console.error('Failed to start server:', err);
+  } catch (error) {
+    console.error('Failed to start server:', error);
     process.exit(1);
   }
 };
