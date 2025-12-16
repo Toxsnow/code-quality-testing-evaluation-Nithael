@@ -4,7 +4,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --passWithNoTests --watchAll=false",
+    "test": "jest --passWithNoTests",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix"
   },
@@ -32,12 +34,17 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
+    "@testing-library/user-event": "^14.6.1",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-perfectionist": "^4.15.1",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^4.6.2",
-    "globals": "^14.0.0"
+    "globals": "^14.0.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest-environment-jsdom": "^27.5.1"
   }
 }
