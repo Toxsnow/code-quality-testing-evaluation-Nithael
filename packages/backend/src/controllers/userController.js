@@ -18,7 +18,8 @@ exports.registerUser = (req, res) => {
         return res.status(500).json({ error: 'Error creating user' });
       }
 
-      const token = jwt.sign({ id: this.lastID }, 'your-super-secret-key-that-should-not-be-hardcoded', {
+      const jwtSecret = process.env.JWT_SECRET || 'your-super-secret-key-that-should-not-be-hardcoded';
+      const token = jwt.sign({ id: this.lastID }, jwtSecret, {
         expiresIn: 86400
       });
 
@@ -34,12 +35,16 @@ exports.loginUser = (req, res) => {
 
   database.get(`SELECT * FROM users WHERE username = ?`, [username], (err, user) => {
     if (err) return res.status(500).json({ error: 'Error on the server.' });
-    if (!user) return res.status(404).json({ error: 'No user found.' });
+  if (!user) return res.status(404).json({ error: 'No user found.' });
 
-    const passwordIsValid = bcrypt.compareSync(password, user.password);
-    if (!passwordIsValid) return res.status(401).json({ auth: false, token: null });
+  const passwordIsValid = bcrypt.compareSync(password, user.password);
+  if (!passwordIsValid) {
+    // Return a consistent error object for invalid credentials
+    return res.status(401).json({ error: 'Invalid username or password', auth: false, token: null });
+  }
 
-    const token = jwt.sign({ id: user.id }, 'your-super-secret-key-that-should-not-be-hardcoded', { expiresIn: 86400 });
+  const jwtSecret = process.env.JWT_SECRET || 'your-super-secret-key-that-should-not-be-hardcoded';
+  const token = jwt.sign({ id: user.id }, jwtSecret, { expiresIn: 86400 });
 
     res.status(200).json({
       auth: true,

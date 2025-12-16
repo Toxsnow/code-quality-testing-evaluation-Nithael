@@ -11,11 +11,20 @@ const Login = ({ onLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await loginUser(username, password);
-      onLogin();
-      navigate('/products');
+      const data = await loginUser(username, password);
+      // If login succeeded, trigger parent handler and navigate
+      if (data && data.auth) {
+        onLogin();
+        navigate('/products');
+      } else {
+        // Defensive: show a clear message if backend returned auth:false
+        setError(data.error || 'Invalid username or password');
+      }
     } catch (err) {
-      setError(err.error || 'An error occurred');
+      // err can be { error: '...' } or another shape from network
+      if (err && err.error) setError(err.error);
+      else if (err && err.message) setError(err.message);
+      else setError('An error occurred');
     }
   };
 

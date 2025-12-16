@@ -54,16 +54,18 @@ const initDatabase = (db) => {
           const bcrypt = require('bcryptjs');
           const hashedPassword = bcrypt.hashSync('admin123', 8);
 
+          // Use INSERT OR IGNORE so repeated runs won't throw a UNIQUE constraint
+          // if the admin user already exists (safe idempotent migration).
           db.run(
             `
-            INSERT INTO users (firstname, lastname, username, password)
+            INSERT OR IGNORE INTO users (firstname, lastname, username, password)
             VALUES (?, ?, ?, ?)
           `,
             ['Admin', 'User', 'admin', hashedPassword],
             (err) => {
               if (err) {
-                console.error('Error creating admin user:', err);
-                reject(err);
+                // Log but don't reject - migration should be resilient
+                console.error('Error creating admin user (ignored if duplicate):', err);
               }
             }
           );
@@ -85,6 +87,8 @@ const initDatabase = (db) => {
           ];
 
           sampleProducts.forEach(([name, price, stock]) => {
+            // INSERT OR IGNORE isn't necessary here since products have no unique
+            // constraint, but we still log failures without rejecting migration.
             db.run('INSERT INTO products (name, price, stock) VALUES (?, ?, ?)', [name, price, stock], (err) => {
               if (err) console.error('Error inserting product:', name, err);
             });
