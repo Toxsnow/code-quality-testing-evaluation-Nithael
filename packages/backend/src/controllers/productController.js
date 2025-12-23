@@ -12,7 +12,6 @@ exports.getAllProducts = (req, res) => {
     const productsWithDetails = [];
 
     for (const product of products) {
-
       await new Promise((resolve) => {
         database.get('SELECT COUNT(*) as total FROM products WHERE price <= ?', [product.price], (err, result) => {
           if (!err) {

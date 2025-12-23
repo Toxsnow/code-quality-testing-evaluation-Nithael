@@ -1,7 +1,7 @@
-const request = require('supertest');
-const express = require('express');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const express = require('express');
+const request = require('supertest');
+
 const userController = require('../controllers/userController');
 const db = require('../db/database');
 

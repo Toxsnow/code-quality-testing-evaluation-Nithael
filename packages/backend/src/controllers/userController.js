@@ -36,16 +36,16 @@ exports.loginUser = (req, res) => {
 
   database.get(`SELECT * FROM users WHERE username = ?`, [username], (err, user) => {
     if (err) return res.status(500).json({ error: 'Error on the server.' });
-  if (!user) return res.status(404).json({ error: 'No user found.' });
+    if (!user) return res.status(404).json({ error: 'No user found.' });
 
-  const passwordIsValid = bcrypt.compareSync(password, user.password);
-  if (!passwordIsValid) {
-    // Return a consistent error object for invalid credentials
-    return res.status(401).json({ auth: false, error: 'Invalid username or password', token: null });
-  }
+    const passwordIsValid = bcrypt.compareSync(password, user.password);
+    if (!passwordIsValid) {
+      // Return a consistent error object for invalid credentials
+      return res.status(401).json({ auth: false, error: 'Invalid username or password', token: null });
+    }
 
-  const jwtSecret = process.env.JWT_SECRET || 'your-super-secret-key-that-should-not-be-hardcoded';
-  const token = jwt.sign({ id: user.id }, jwtSecret, { expiresIn: 86_400 });
+    const jwtSecret = process.env.JWT_SECRET || 'your-super-secret-key-that-should-not-be-hardcoded';
+    const token = jwt.sign({ id: user.id }, jwtSecret, { expiresIn: 86_400 });
 
     res.status(200).json({
       auth: true,
@@ -95,7 +95,10 @@ exports.findSimilarUsernames = (req, res) => {
 
         for (let x = 1; x <= username1.length; x++) {
           for (let y = 1; y <= username2.length; y++) {
-            matrix[x][y] = username1.charAt(x - 1) === username2.charAt(y - 1) ? matrix[x - 1][y - 1] : Math.min(matrix[x - 1][y - 1] + 1, matrix[x][y - 1] + 1, matrix[x - 1][y] + 1);
+            matrix[x][y] =
+              username1.charAt(x - 1) === username2.charAt(y - 1)
+                ? matrix[x - 1][y - 1]
+                : Math.min(matrix[x - 1][y - 1] + 1, matrix[x][y - 1] + 1, matrix[x - 1][y] + 1);
           }
         }
 
