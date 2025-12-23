@@ -1,6 +1,10 @@
 export default {
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.js'],
+  transform: {
+    '^.+\\.(js|jsx)$': ['babel-jest', { presets: ['@babel/preset-env', '@babel/preset-react'] }]
+  },
+  transformIgnorePatterns: ['node_modules/(?!(axios)/)'],
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy'
   },
@@ -14,8 +18,5 @@ export default {
       lines: 80
     }
   },
-  testMatch: ['**/__tests__/**/*.{js,jsx}', '**/?(*.)+(spec|test).{js,jsx}'],
-  transform: {
-    '^.+\\.(js|jsx)$': ['babel-jest', { rootMode: 'upward' }]
-  }
+  testMatch: ['**/__tests__/**/*.{js,jsx}', '**/?(*.)+(spec|test).{js,jsx}']
 };
