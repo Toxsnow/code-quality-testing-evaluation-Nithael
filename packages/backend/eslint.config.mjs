@@ -36,5 +36,24 @@ export default [
         }
       ]
     }
+  },
+  {
+    files: ['**/__tests__/**/*.js', '**/*.test.js', '**/*.spec.js'],
+    languageOptions: {
+      globals: {
+        describe: 'readonly',
+        it: 'readonly',
+        expect: 'readonly',
+        test: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+        jest: 'readonly'
+      }
+    },
+    rules: {
+      'n/no-unpublished-require': 'off'
+    }
   }
 ];

@@ -1,5 +1,6 @@
-const request = require('supertest');
 const express = require('express');
+const request = require('supertest');
+
 const productController = require('../controllers/productController');
 const db = require('../db/database');
 
@@ -32,7 +33,7 @@ describe('Product Controller', () => {
           callback(null, mockProducts);
         }),
         get: jest.fn((query, params, callback) => {
-          callback(null, { total: 1, avg: 15 });
+          callback(null, { avg: 15, total: 1 });
         })
       };
       db.getDb.mockReturnValue(mockDb);
