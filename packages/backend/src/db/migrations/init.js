@@ -2,7 +2,8 @@ const initDatabase = (db) => {
   return new Promise((resolve, reject) => {
     db.serialize(() => {
       // Create Users table
-      db.run(`
+      db.run(
+        `
         CREATE TABLE IF NOT EXISTS users (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           firstname TEXT,
@@ -12,15 +13,18 @@ const initDatabase = (db) => {
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
           updated_at DATETIME
         )
-      `, (err) => {
-        if (err) {
-          console.error('Error creating users table:', err);
-          reject(err);
+      `,
+        (err) => {
+          if (err) {
+            console.error('Error creating users table:', err);
+            reject(err);
+          }
         }
-      });
+      );
 
       // Create Products table
-      db.run(`
+      db.run(
+        `
         CREATE TABLE IF NOT EXISTS products (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           name TEXT NOT NULL,
@@ -29,12 +33,14 @@ const initDatabase = (db) => {
           created_at DATETIME DEFAULT (datetime('now')),
           updated_at DATETIME
         )
-      `, (err) => {
-        if (err) {
-          console.error('Error creating products table:', err);
-          reject(err);
+      `,
+        (err) => {
+          if (err) {
+            console.error('Error creating products table:', err);
+            reject(err);
+          }
         }
-      });
+      );
 
       // Add sample data if tables are empty
       db.get('SELECT COUNT(*) as count FROM users', [], (err, result) => {
@@ -48,17 +54,21 @@ const initDatabase = (db) => {
           const bcrypt = require('bcryptjs');
           const hashedPassword = bcrypt.hashSync('admin123', 8);
 
-          db.run(`
-            INSERT INTO users (firstname, lastname, username, password)
+          // Use INSERT OR IGNORE so repeated runs won't throw a UNIQUE constraint
+          // if the admin user already exists (safe idempotent migration).
+          db.run(
+            `
+            INSERT OR IGNORE INTO users (firstname, lastname, username, password)
             VALUES (?, ?, ?, ?)
           `,
-              ['Admin', 'User', 'admin', hashedPassword],
-              (err) => {
-                if (err) {
-                  console.error('Error creating admin user:', err);
-                  reject(err);
-                }
-              });
+            ['Admin', 'User', 'admin', hashedPassword],
+            (err) => {
+              if (err) {
+                // Log but don't reject - migration should be resilient
+                console.error('Error creating admin user (ignored if duplicate):', err);
+              }
+            }
+          );
         }
       });
 
@@ -76,15 +86,13 @@ const initDatabase = (db) => {
             ['Headphones', 79.99, 20]
           ];
 
-          sampleProducts.forEach(([name, price, stock]) => {
-            db.run(
-                'INSERT INTO products (name, price, stock) VALUES (?, ?, ?)',
-                [name, price, stock],
-                (err) => {
-                  if (err) console.error('Error inserting product:', name, err);
-                }
-            );
-          });
+          for (const [name, price, stock] of sampleProducts) {
+            // INSERT OR IGNORE isn't necessary here since products have no unique
+            // constraint, but we still log failures without rejecting migration.
+            db.run('INSERT INTO products (name, price, stock) VALUES (?, ?, ?)', [name, price, stock], (err) => {
+              if (err) console.error('Error inserting product:', name, err);
+            });
+          }
         }
       });
 
