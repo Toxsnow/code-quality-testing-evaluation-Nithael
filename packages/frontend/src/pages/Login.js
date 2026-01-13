@@ -61,28 +61,44 @@ const Login = ({ onLogin }) => {
           gap: '15px'
         }}
       >
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          style={{
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            padding: '8px'
-          }}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={{
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            padding: '8px'
-          }}
-        />
+        <div>
+          <label htmlFor="username" style={{ display: 'block', marginBottom: '5px' }}>
+            Username
+          </label>
+          <input
+            id="username"
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            style={{
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              padding: '8px',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}
+          />
+        </div>
+        <div>
+          <label htmlFor="password" style={{ display: 'block', marginBottom: '5px' }}>
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={{
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              padding: '8px',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}
+          />
+        </div>
         <button
           type="submit"
           style={{

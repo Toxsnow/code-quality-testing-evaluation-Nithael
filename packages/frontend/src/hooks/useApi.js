@@ -22,7 +22,8 @@ export const useApi = () => {
 
       return response.data;
     } catch (err) {
-      setError(err.response?.data?.error || 'An error occurred');
+      const errorMessage = err.response?.data?.error || err.message || 'An error occurred';
+      setError(errorMessage);
       throw err;
     } finally {
       setLoading(false);

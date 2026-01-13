@@ -4,6 +4,7 @@ import { getUsers } from '../services/api';
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [joinedFilter, setJoinedFilter] = useState('');
@@ -13,6 +14,7 @@ const UserList = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        setLoading(true);
         const data = await getUsers();
         const processedUsers = data.map((user) => ({
           ...user,
@@ -32,6 +34,8 @@ const UserList = () => {
       } catch (err) {
         setError('Failed to load users');
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchUsers();
@@ -158,68 +162,7 @@ const UserList = () => {
     <div style={{ padding: '20px' }}>
       <h2 style={{ marginBottom: '20px' }}>Users</h2>
 
-      <div
-        style={{
-          display: 'flex',
-          gap: '10px',
-          marginBottom: '20px'
-        }}
-      >
-        <input
-          type="text"
-          placeholder="Search users..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            flex: 1,
-            padding: '8px'
-          }}
-        />
-
-        <select
-          value={joinedFilter}
-          onChange={(e) => setJoinedFilter(e.target.value)}
-          style={{
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            padding: '8px'
-          }}
-        >
-          <option value="">All Users</option>
-          <option value="week">Joined this week</option>
-          <option value="month">Joined this month</option>
-          <option value="older">Joined earlier</option>
-        </select>
-
-        <select
-          value={sortField}
-          onChange={(e) => setSortField(e.target.value)}
-          style={{
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            padding: '8px'
-          }}
-        >
-          <option value="name">Sort by Name</option>
-          <option value="username">Sort by Username</option>
-          <option value="joined">Sort by Join Date</option>
-        </select>
-
-        <button
-          onClick={() => setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'))}
-          style={{
-            backgroundColor: 'white',
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            padding: '8px'
-          }}
-        >
-          {sortDirection === 'asc' ? '↑' : '↓'}
-        </button>
-      </div>
+      {loading && <div>Loading users...</div>}
 
       {error && (
         <div
@@ -228,54 +171,135 @@ const UserList = () => {
             borderRadius: '4px',
             color: 'red',
             marginBottom: '20px',
-            padding: '10px'
+            padding: '15px'
           }}
         >
           {error}
         </div>
       )}
 
-      <div
-        style={{
-          display: 'grid',
-          gap: '15px'
-        }}
-      >
-        {filteredUsers.map((user) => (
+      {!loading && !error && (
+        <>
           <div
-            key={user.id}
             style={{
-              alignItems: 'center',
-              backgroundColor: 'white',
-              border: '1px solid #ddd',
-              borderRadius: '8px',
               display: 'flex',
-              justifyContent: 'space-between',
-              padding: '15px'
+              gap: '10px',
+              marginBottom: '20px'
             }}
           >
-            <div>
-              <h3 style={{ margin: '0 0 5px 0' }}>
-                {user.firstname} {user.lastname}
-              </h3>
-              <p style={{ color: '#666', margin: '0' }}>@{user.username}</p>
-            </div>
-            <div
+            <input
+              type="text"
+              placeholder="Search users..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               style={{
-                backgroundColor: '#e3f2fd',
+                border: '1px solid #ddd',
                 borderRadius: '4px',
-                fontSize: '0.9em',
-                padding: '5px 10px'
+                flex: 1,
+                padding: '8px'
+              }}
+            />
+
+            <select
+              value={joinedFilter}
+              onChange={(e) => setJoinedFilter(e.target.value)}
+              style={{
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                padding: '8px'
               }}
             >
-              Joined: {new Date(user.created_at).toLocaleDateString()}
-            </div>
-          </div>
-        ))}
-      </div>
+              <option value="">All Users</option>
+              <option value="week">Joined this week</option>
+              <option value="month">Joined this month</option>
+              <option value="older">Joined earlier</option>
+            </select>
 
-      {filteredUsers.length === 0 && (
-        <p style={{ color: '#666', textAlign: 'center' }}>No users found matching your criteria</p>
+            <select
+              value={sortField}
+              onChange={(e) => setSortField(e.target.value)}
+              style={{
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                padding: '8px'
+              }}
+            >
+              <option value="name">Sort by Name</option>
+              <option value="username">Sort by Username</option>
+              <option value="joined">Sort by Join Date</option>
+            </select>
+
+            <button
+              onClick={() => setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'))}
+              style={{
+                backgroundColor: 'white',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                padding: '8px'
+              }}
+            >
+              {sortDirection === 'asc' ? '↑' : '↓'}
+            </button>
+          </div>
+
+          {error && (
+            <div
+              style={{
+                backgroundColor: '#ffebee',
+                borderRadius: '4px',
+                color: 'red',
+                marginBottom: '20px',
+                padding: '10px'
+              }}
+            >
+              {error}
+            </div>
+          )}
+
+          <div
+            style={{
+              display: 'grid',
+              gap: '15px'
+            }}
+          >
+            {filteredUsers.map((user) => (
+              <div
+                key={user.id}
+                style={{
+                  alignItems: 'center',
+                  backgroundColor: 'white',
+                  border: '1px solid #ddd',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  padding: '15px'
+                }}
+              >
+                <div>
+                  <h3 style={{ margin: '0 0 5px 0' }}>
+                    {user.firstname} {user.lastname}
+                  </h3>
+                  <p style={{ color: '#666', margin: '0' }}>@{user.username}</p>
+                </div>
+                <div
+                  style={{
+                    backgroundColor: '#e3f2fd',
+                    borderRadius: '4px',
+                    fontSize: '0.9em',
+                    padding: '5px 10px'
+                  }}
+                >
+                  Joined: {new Date(user.created_at).toLocaleDateString()}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {filteredUsers.length === 0 && (
+            <p style={{ color: '#666', textAlign: 'center' }}>No users found matching your criteria</p>
+          )}
+        </>
       )}
     </div>
   );

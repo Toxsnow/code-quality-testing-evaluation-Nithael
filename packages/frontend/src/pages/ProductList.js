@@ -5,6 +5,7 @@ import { getProducts } from '../services/api';
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [priceFilter, setPriceFilter] = useState('');
@@ -13,6 +14,7 @@ const ProductList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setLoading(true);
         const data = await getProducts();
         const processedData = data.map((item) => ({
           ...item,
@@ -24,6 +26,8 @@ const ProductList = () => {
       } catch (err) {
         setError('Failed to load products');
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchProducts();
@@ -130,56 +134,7 @@ const ProductList = () => {
         </Link>
       </div>
 
-      <div
-        style={{
-          display: 'flex',
-          gap: '10px',
-          marginBottom: '20px'
-        }}
-      >
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            flex: 1,
-            padding: '8px'
-          }}
-        />
-
-        <select
-          value={priceFilter}
-          onChange={(e) => setPriceFilter(e.target.value)}
-          style={{
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            padding: '8px'
-          }}
-        >
-          <option value="">All Prices</option>
-          <option value="low">Low (&lt; $50)</option>
-          <option value="medium">Medium ($50 - $100)</option>
-          <option value="high">High (&gt; $100)</option>
-        </select>
-
-        <select
-          value={stockFilter}
-          onChange={(e) => setStockFilter(e.target.value)}
-          style={{
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            padding: '8px'
-          }}
-        >
-          <option value="">All Stock</option>
-          <option value="out">Out of Stock</option>
-          <option value="low">Low Stock</option>
-          <option value="available">Available</option>
-        </select>
-      </div>
+      {loading && <div>Loading products...</div>}
 
       {error && (
         <div
@@ -188,46 +143,115 @@ const ProductList = () => {
             borderRadius: '4px',
             color: 'red',
             marginBottom: '20px',
-            padding: '10px'
+            padding: '15px'
           }}
         >
           {error}
         </div>
       )}
 
-      <div
-        style={{
-          display: 'grid',
-          gap: '20px',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))'
-        }}
-      >
-        {filteredProducts.map((product) => (
+      {!loading && !error && (
+        <>
           <div
-            key={product.id}
             style={{
-              backgroundColor: 'white',
-              border: '1px solid #ddd',
-              borderRadius: '8px',
-              padding: '15px'
+              display: 'flex',
+              gap: '10px',
+              marginBottom: '20px'
             }}
           >
-            <h3 style={{ margin: '0 0 10px 0' }}>{product.name}</h3>
-            <p style={{ color: '#666', margin: '5px 0' }}>Price: ${product.price}</p>
-            <p
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               style={{
-                color: product.stock > 0 ? '#4CAF50' : '#f44336',
-                margin: '5px 0'
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                flex: 1,
+                padding: '8px'
+              }}
+            />
+
+            <select
+              value={priceFilter}
+              onChange={(e) => setPriceFilter(e.target.value)}
+              style={{
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                padding: '8px'
               }}
             >
-              Stock: {product.stock}
-            </p>
-          </div>
-        ))}
-      </div>
+              <option value="">All Prices</option>
+              <option value="low">Low (&lt; $50)</option>
+              <option value="medium">Medium ($50 - $100)</option>
+              <option value="high">High (&gt; $100)</option>
+            </select>
 
-      {filteredProducts.length === 0 && (
-        <p style={{ color: '#666', textAlign: 'center' }}>No products found matching your criteria</p>
+            <select
+              value={stockFilter}
+              onChange={(e) => setStockFilter(e.target.value)}
+              style={{
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                padding: '8px'
+              }}
+            >
+              <option value="">All Stock</option>
+              <option value="out">Out of Stock</option>
+              <option value="low">Low Stock</option>
+              <option value="available">Available</option>
+            </select>
+          </div>
+
+          {error && (
+            <div
+              style={{
+                backgroundColor: '#ffebee',
+                borderRadius: '4px',
+                color: 'red',
+                marginBottom: '20px',
+                padding: '10px'
+              }}
+            >
+              {error}
+            </div>
+          )}
+
+          <div
+            style={{
+              display: 'grid',
+              gap: '20px',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))'
+            }}
+          >
+            {filteredProducts.map((product) => (
+              <div
+                key={product.id}
+                style={{
+                  backgroundColor: 'white',
+                  border: '1px solid #ddd',
+                  borderRadius: '8px',
+                  padding: '15px'
+                }}
+              >
+                <h3 style={{ margin: '0 0 10px 0' }}>{product.name}</h3>
+                <p style={{ color: '#666', margin: '5px 0' }}>Price: ${product.price}</p>
+                <p
+                  style={{
+                    color: product.stock > 0 ? '#4CAF50' : '#f44336',
+                    margin: '5px 0'
+                  }}
+                >
+                  Stock: {product.stock}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {filteredProducts.length === 0 && (
+            <p style={{ color: '#666', textAlign: 'center' }}>No products found matching your criteria</p>
+          )}
+        </>
       )}
     </div>
   );

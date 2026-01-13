@@ -60,54 +60,86 @@ const Register = () => {
           gap: '15px'
         }}
       >
-        <input
-          type="text"
-          name="firstname"
-          placeholder="First Name"
-          value={formData.firstname}
-          onChange={handleChange}
-          style={{
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            padding: '8px'
-          }}
-        />
-        <input
-          type="text"
-          name="lastname"
-          placeholder="Last Name"
-          value={formData.lastname}
-          onChange={handleChange}
-          style={{
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            padding: '8px'
-          }}
-        />
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleChange}
-          style={{
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            padding: '8px'
-          }}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          style={{
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            padding: '8px'
-          }}
-        />
+        <div>
+          <label htmlFor="firstname" style={{ display: 'block', marginBottom: '5px' }}>
+            First Name
+          </label>
+          <input
+            id="firstname"
+            type="text"
+            name="firstname"
+            placeholder="First Name"
+            value={formData.firstname}
+            onChange={handleChange}
+            style={{
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              padding: '8px',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}
+          />
+        </div>
+        <div>
+          <label htmlFor="lastname" style={{ display: 'block', marginBottom: '5px' }}>
+            Last Name
+          </label>
+          <input
+            id="lastname"
+            type="text"
+            name="lastname"
+            placeholder="Last Name"
+            value={formData.lastname}
+            onChange={handleChange}
+            style={{
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              padding: '8px',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}
+          />
+        </div>
+        <div>
+          <label htmlFor="username" style={{ display: 'block', marginBottom: '5px' }}>
+            Username
+          </label>
+          <input
+            id="username"
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={formData.username}
+            onChange={handleChange}
+            style={{
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              padding: '8px',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}
+          />
+        </div>
+        <div>
+          <label htmlFor="password" style={{ display: 'block', marginBottom: '5px' }}>
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            style={{
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              padding: '8px',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}
+          />
+        </div>
         <button
           type="submit"
           style={{

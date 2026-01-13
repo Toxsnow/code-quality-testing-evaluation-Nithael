@@ -65,41 +65,65 @@ const AddProduct = () => {
           gap: '15px'
         }}
       >
-        <input
-          type="text"
-          placeholder="Product Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          style={{
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            padding: '8px'
-          }}
-        />
+        <div>
+          <label htmlFor="productName" style={{ display: 'block', marginBottom: '5px' }}>
+            Product Name
+          </label>
+          <input
+            id="productName"
+            type="text"
+            placeholder="Product Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            style={{
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              padding: '8px',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}
+          />
+        </div>
 
-        <input
-          type="number"
-          placeholder="Price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          style={{
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            padding: '8px'
-          }}
-        />
+        <div>
+          <label htmlFor="price" style={{ display: 'block', marginBottom: '5px' }}>
+            Price
+          </label>
+          <input
+            id="price"
+            type="number"
+            placeholder="Price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            style={{
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              padding: '8px',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}
+          />
+        </div>
 
-        <input
-          type="number"
-          placeholder="Stock"
-          value={stock}
-          onChange={(e) => setStock(e.target.value)}
-          style={{
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            padding: '8px'
-          }}
-        />
+        <div>
+          <label htmlFor="stock" style={{ display: 'block', marginBottom: '5px' }}>
+            Stock
+          </label>
+          <input
+            id="stock"
+            type="number"
+            placeholder="Stock"
+            value={stock}
+            onChange={(e) => setStock(e.target.value)}
+            style={{
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              padding: '8px',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}
+          />
+        </div>
 
         <div style={{ display: 'flex', gap: '10px' }}>
           <button
